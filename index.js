@@ -39,24 +39,28 @@ class SSWebSocket {
   }
 
   initWebSocket = () => {
-    this.ws = new WebSocket(this.params.uri, this.params.protocols, this.params.options);
+    if ('WebSocket' in window) {
+      this.ws = new WebSocket(this.params.uri, this.params.protocols, this.params.options);
+    } else if ('MozWebSocket' in window) {
+      this.ws = new MozWebSocket(this.params.uri, this.params.protocols, this.params.options);
+    } else {
+      console.error('WebSocket is not supported by this browser');
+      return;
+    }
+
     // when open websocket
     this.ws.onopen = (e) => {
       this.params.timeOutId && clearTimeout(this.params.timeOutId);
-      console.log('ws open');
       this.onopen();
     };
     this.ws.onmessage = (e) => {
-      console.log('ws onmessage');
       this.onmessage(e);
     };
     this.ws.onclose = (e) => {
-      console.log('close ws', e);
-      // this.reconnect();
+      this.reconnect();
       this.onerror(e);
     };
     this.ws.onerror = (e) => {
-      console.log('error ws', e);
       this.reconnect();
       this.onclose(e);
     };
@@ -145,7 +149,7 @@ class SSWebSocket {
         console.error('Send group message error', error.message);
       }
     } else {
-      console.log('WebSocket error: connect not open to send message');
+      console.error('WebSocket error: connect not open to send message');
     }
   }
 

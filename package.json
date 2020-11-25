@@ -1,5 +1,5 @@
 {
-  "name": "SSWebSocket",
+  "name": "sswebsocket",
   "version": "1.0.0",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -8,5 +8,18 @@
     "typescript",
     "websocket"
   ],
-  "author": "tianxiqin@kingsoft.com"
+  "author": "tianxiqin@kingsoft.com",
+  "description": "Secondary package websocket",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/txqsimon/SSWebSocket.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/txqsimon/SSWebSocket/issues"
+  },
+  "homepage": "https://github.com/txqsimon/SSWebSocket#readme"
 }

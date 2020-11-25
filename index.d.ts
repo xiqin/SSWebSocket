@@ -1,10 +1,10 @@
-interface WebSocketMessageEvent {
+interface SSWebSocketMessageEvent {
   data?: any;
 }
-interface WebSocketErrorEvent {
+interface SSWebSocketErrorEvent {
   message: string;
 }
-interface WebSocketCloseEvent {
+interface SSWebSocketCloseEvent {
   code?: number;
   reason?: string;
 }
@@ -19,8 +19,6 @@ interface SSWebSocketParams {
   needReconnect?: boolean;
   // Reconnection interval (ms)
   reconnectInterval?: number;
-  // Number of reconnections
-  reconnectAttempts?: number;
   // Maximum number of reconnections
   maxReconnectAttempts?: number;
 }
@@ -31,7 +29,7 @@ export default class SSWebSocket {
   sendGroupMessage(data: string | ArrayBuffer | ArrayBufferView | Blob): void;
   close(code?: number, reason?: string): void;
   onopen: (() => void) | null;
-  onmessage: ((event: WebSocketMessageEvent) => void) | null;
-  onerror: ((event: WebSocketErrorEvent) => void) | null;
-  onclose: ((event: WebSocketCloseEvent) => void) | null;
+  onmessage: ((event: SSWebSocketMessageEvent) => void) | null;
+  onerror: ((event: SSWebSocketErrorEvent) => void) | null;
+  onclose: ((event: SSWebSocketCloseEvent) => void) | null;
 }
