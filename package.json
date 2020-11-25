@@ -1,0 +1,12 @@
+{
+  "name": "SSWebSocket",
+  "version": "1.0.0",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "websocket"
+  ],
+  "author": "tianxiqin@kingsoft.com"
+}
