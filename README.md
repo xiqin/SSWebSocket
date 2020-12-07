@@ -51,4 +51,4 @@ wx.onclose = () => {}
 | needReconnect  | boolean  |  No | true |  Automatic reconnection when disconnected |
 | reconnectInterval  | number  | No  | 30000  | Reconnection interval（unit：ms）|
 | maxReconnectAttempts  | number  | No  | 5  | Maximum number of reconnections |
-| debuf  | boolean  | No  | false  | It will print debugging information |
+| debug | boolean  | No  | false  | It will print debugging information |
