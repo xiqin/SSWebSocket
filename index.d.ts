@@ -24,10 +24,12 @@ interface SSWebSocketParams {
 }
 
 export default class SSWebSocket {
-  static getInstance(params: SSWebSocketParams): void;
+  constructor(params: SSWebSocketParams);
+  // static getInstance(params: SSWebSocketParams): void;
   sendMessage(data: string | ArrayBuffer | ArrayBufferView | Blob): void;
   sendGroupMessage(data: string | ArrayBuffer | ArrayBufferView | Blob): void;
   close(code?: number, reason?: string): void;
+  destory(): void;
   onopen: (() => void) | null;
   onmessage: ((event: SSWebSocketMessageEvent) => void) | null;
   onerror: ((event: SSWebSocketErrorEvent) => void) | null;

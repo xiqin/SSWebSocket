@@ -13,7 +13,7 @@ class SSWebSocket {
     options: null,
     needReconnect: true,
     // Reconnection interval (ms)
-    reconnectInterval: 30000,
+    reconnectInterval: 10000,
     // Number of reconnections
     reconnectAttempts: 0,
     // Maximum number of reconnections
@@ -21,22 +21,25 @@ class SSWebSocket {
     // pingInterval: 15000,
     // pongInterval: 10000,
     // pingMessage: null,
+    debug: false,
   };
 
   constructor(params) {
+    console.log('init sswebsocket');
     this.params = Object.assign({}, this.params, params);
+    this.reconnectLock = false;
     this.initWebSocket();
   }
 
   /**
    * @param {*} param0 
    */
-  static getInstance = (params) => {
-    if (!this._instance) {
-      this._instance = new SSWebSocket(params);
-    }
-    return this._instance;
-  }
+  // static getInstance = (params) => {
+  //   if (!this._instance) {
+  //     this._instance = new SSWebSocket(params);
+  //   }
+  //   return this._instance;
+  // }
 
   initWebSocket = () => {
     if ('WebSocket' in window) {
@@ -50,6 +53,7 @@ class SSWebSocket {
 
     // when open websocket
     this.ws.onopen = (e) => {
+      this.params.reconnectAttempts = 0;
       this.params.timeOutId && clearTimeout(this.params.timeOutId);
       this.onopen();
     };
@@ -93,12 +97,18 @@ class SSWebSocket {
    * reconnect
    */
   reconnect = () => {
-    if (!this.params.needReconnect || this.params.reconnectAttempts > this.params.maxReconnectAttempts) {
+    if (!this.params.needReconnect || this.reconnectLock) {
+      return;
+    }
+    if (this.params.reconnectAttempts > this.params.maxReconnectAttempts) {
       return;
     }
 
+    this.reconnectLock = true;
+    this.params.reconnectAttempts++;
     this.params.timeOutId = setTimeout(() => {
       this.initWebSocket();
+      this.reconnectLock = false;
     }, this.params.reconnectInterval);
   }
 
@@ -122,19 +132,42 @@ class SSWebSocket {
   statusChange = (e) => { }
 
   /**
+   * 
+   * @param {*} data 
+   */
+  send = (data) => {
+    if(!this.ws) {
+      this.reconnect();
+      return;
+    }
+
+    if(this.ws.readyState === WebSocket.CLOSED) {
+      this.ws.close();
+      this.reconnect();
+    } else if (this.ws.readyState === WebSocket.OPEN) {
+      try {
+        this.ws.send(data);
+      } catch (error) {
+        this.params.debug && console.log('Send single message error', error.message);
+      }
+    }
+  }
+
+  /**
    * Send single chat message
    * @param {*} data 
    */
   sendMessage = (data) => {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      try {
-        this.ws.send(data);
-      } catch (error) {
-        console.error('Send single message error', error.message);
-      }
-    } else {
-      console.error('WebSocket error: connect not open to send message');
-    }
+    this.send(data);
+    // if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+    //   try {
+    //     this.ws.send(data);
+    //   } catch (error) {
+    //     this.params.debug && console.log('Send single message error', error.message);
+    //   }
+    // } else {
+    //   this.params.debug && console.log('WebSocket error: connect not open to send message');
+    // }
   }
 
   /**
@@ -142,29 +175,31 @@ class SSWebSocket {
    * @param {*} data 
    */
   sendGroupMessage = (data) => {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      try {
-        this.ws.send(data);
-      } catch (error) {
-        console.error('Send group message error', error.message);
-      }
-    } else {
-      console.error('WebSocket error: connect not open to send message');
-    }
+    this.send(data);
+    // if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+    //   try {
+    //     this.ws.send(data);
+    //   } catch (error) {
+    //     this.params.debug && console.log('Send group message error', error.message);
+    //   }
+    // } else {
+    //   this.params.debug && console.log('WebSocket error: connect not open to send message');
+    // }
   }
 
   /**
    * close websocket connection
    */
   close = (code, reason) => {
-    this.params.needReconnect = false;
+    // this.params.needReconnect = false;
     this.params.timeOutId && clearTimeout(this.params.timeOutId);
-    this.ws.close(code, reason);
+    this.ws && this.ws.close(code, reason);
   }
 
   destory() {
     this.close();
-    this._instance = null;
+    this.params.needReconnect = false;
+    // this._instance = null;
     this.ws = null;
   }
 }
