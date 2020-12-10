@@ -25,7 +25,6 @@ class SSWebSocket {
   };
 
   constructor(params) {
-    console.log('init sswebsocket');
     this.params = Object.assign({}, this.params, params);
     this.reconnectLock = false;
     this.initWebSocket();
@@ -53,9 +52,9 @@ class SSWebSocket {
 
     // when open websocket
     this.ws.onopen = (e) => {
+      this.onopen();
       this.params.reconnectAttempts = 0;
       this.params.timeOutId && clearTimeout(this.params.timeOutId);
-      this.onopen();
     };
     this.ws.onmessage = (e) => {
       this.onmessage(e);

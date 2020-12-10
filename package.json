@@ -1,6 +1,6 @@
 {
   "name": "sswebsocket",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "./index.js",
   "types": "./index.d.ts",
   "keywords": [
@@ -15,11 +15,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/txqsimon/SSWebSocket.git"
+    "url": "git+https://github.com/xiqin/SSWebSocket.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/txqsimon/SSWebSocket/issues"
+    "url": "https://github.com/xiqin/SSWebSocket/issues"
   },
-  "homepage": "https://github.com/txqsimon/SSWebSocket#readme"
+  "homepage": "https://github.com/xiqin/SSWebSocket#readme"
 }
